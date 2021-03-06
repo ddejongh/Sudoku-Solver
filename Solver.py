@@ -3,7 +3,6 @@
 # Description: 
 #       - Solver for Sudoku using backtracking algorithm. 
 #       - Should be nice, I have no idea what I'm doing.
-# 
 #       - Will eventually update with a GUI version using pygame I think
 import time
 
@@ -20,10 +19,52 @@ board = [
     [0, 0, 9, 0, 0, 0, 1, 0, 0]
 ]
 
+# Utility function for printing grid 
 def print_grid(puzzle): 
     for row in range(9):
         for col in range(9):
             print(puzzle[row][col], end=" "),
         print('\n')
 
-print_grid(board)
+# Find the next empty spot in the board
+# l keeps track of incrementation 
+def find_empty_spot(arr, l): 
+    for row in range(9):
+        for col in range(9):
+            l[0] = row
+            l[1] = col
+            return True 
+    return False 
+
+# Is there a matching value in the same row?
+def check_row(arr, row, num): 
+    for i in range(9):
+        if(arr[row][i] == num):
+            return True
+    return False
+
+# Is there a matching value in the same column?
+def check_col(arr, col, num):
+    for i in range(9):
+        if(arr[i][col] == num):
+            return True
+    return False
+
+# Is there a matching number in its 3x3 grid? 
+def check_subgrid(arr, row, col, num):
+    for i in range(3):
+        for j in range(3):
+            if(arr[i+row][j+col] == num):
+                return True 
+    return False 
+
+# Check the location based on the row, column, and subgrid
+def check_location(arr, row, col, num):
+    return not check_row(arr, row, num) and not check_col(arr, col, num) and not check_subgrid(arr, row - row % 3, col - col % 3, num)
+
+# Driver function here
+if __name__ == "__main__":
+
+    print_grid(board)
+
+    print('Testing testing')
