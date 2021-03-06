@@ -5,6 +5,9 @@
 #       - Should be nice, I have no idea what I'm doing.
 #       - Will eventually update with a GUI version using pygame I think
 import time
+import sys
+
+sys.setrecursionlimit(9000)
 
 # lets start with a static board configuration found online 
 board = [
