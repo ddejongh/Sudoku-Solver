@@ -62,9 +62,35 @@ def check_subgrid(arr, row, col, num):
 def check_location(arr, row, col, num):
     return not check_row(arr, row, num) and not check_col(arr, col, num) and not check_subgrid(arr, row - row % 3, col - col % 3, num)
 
+def solve_sudoku(puzzle): 
+    # keep track of location 
+    l = [0, 0]
+
+    if(not find_empty_spot(puzzle, l)):
+        return True
+
+    row = l[0]
+    col = l[1]
+
+    for num in range(1,10):
+        if(check_location(puzzle, row, col, num)):
+            
+            puzzle[row][col] = num
+
+            if(solve_sudoku(puzzle)):
+                return True 
+
+            puzzle[row][col] = 0
+
+    return False
+
 # Driver function here
 if __name__ == "__main__":
 
-    print_grid(board)
+    # print_grid(board)
+    # print('Testing testing')
 
-    print('Testing testing')
+    if(solve_sudoku(board)):
+        print_grid(board)
+    else:
+        print("Impossible puzzle")
