@@ -32,74 +32,57 @@ def print_board(board):
             print(board[i][j], end=" ")
         print("\n") 
 
-# Check if new number assignment makes board unsafe 
-# board is the puzzle
-# location is our current location tracker 
-def next_empty(board, location):
-    for i in range(9):
-        for j in range(9):
-            if board[i][j] == 0:
-                location[0] = i
-                location[1] = j 
-                return True
-    return False
-
-# Check if the number is already in the row
-# board is the current puzzle state
-# row is the current row
-# num is the guess 
-def num_in_row(board, row, num):
+def is_valid(row, col, num, board): 
+    # check row 
     for i in range(9):
         if board[row][i] == num:
-            return True
-    return False
+            return False
+    
+    # check col
+    for j in range(9):
+        if board[j][col] == num:
+            return False 
 
-# Check if the number is already in the col
-# board is the current puzzle state
-# col is the current col
-# num is the guess
-def num_in_col(board, col, num):
-    for i in range(9):
-        if board[i][col] == num:
-            return True 
-    return False
+    # check block 
+    block_row = row - row % 3
+    block_col = col - col  % 3
 
-# Check the 3x3 subgrid containing the number
-def num_in_sub(board, row, col, num):
-    for i in range(3):
-        for j in range(3):
-            if(board[i + row][j + row] == num): 
-                return True 
-    return False 
+    search_row = block_row
+    while search_row <= block_row + 2:
+        search_col = block_col 
+        while search_col <= block_col + 2:
+            if board[search_row][search_col] == num:
+                return False 
+            search_col += 1
+        search_row += 1
 
+    return True 
 
-# Check the locations safety 
-def location_safe(board, row, col, num):
-    return (
-        not num_in_row(board, row, num) and
-        not num_in_col(board, col, num) and 
-        not num_in_sub(board, row - row % 3, col - col % 3, num)
-    )
-
-def solver(board):
-    location = [0, 0]
-
-    if(not next_empty(board, location)):
-        return True 
-
-    row = location[0]
-    col = location[1] 
-
-    for num in range(1,10):
-        if(location_safe(board, row, col, num)):
-            board[row][col] = num
-            if(solver(board)):
-                return True
-            board[row][col] = 0
-    return False 
-
-if __name__=='__main__':
-    if(solver(board)):
-        print_board(board)
+def solve_helper(row, col, board): 
+    if row == 8 and col == 8:
+        if board[row][col] != 0:
+            print_board(board) 
+        else:  
+            for x in range(1, 10):
+                if is_valid(row, col, x, board):
+                    board[row][col] = x
+        return
+    if col > 8: 
+        solve_helper(row+1, 0, board)
+        return 
+    if board[row][col] == 0:
+        for x in range(1,10):
+            if is_valid(row, col, x, board): 
+                board[row][col] = x
+                solve_helper(row, col+1, board)
+                board[row][col] = 0
     else:
-        print("No solution")
+        solve_helper(row, col+1, board)
+    
+
+
+
+
+
+if __name__ == '__main__':
+    print("test")
